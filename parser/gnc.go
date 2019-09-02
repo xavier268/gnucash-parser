@@ -26,7 +26,11 @@ type Transaction struct {
 // Transactions are a set of Transaction
 type Transactions []Transaction
 
-// Book struct
+// Book struct.
+// This structure (arrays one after the other) cannot be decoded automatically.
+// We need to use "event driven" parsing :
+// see - https://eli.thegreenplace.net/2019/faster-xml-stream-processing-in-go/
+// This should also be more efficient for larger files.
 type Book struct {
 	XMLName      xml.Name     `xml:"book"`
 	Accounts     Accounts     `xml:"account"`
