@@ -7,7 +7,7 @@ import (
 
 func TestParsing(t *testing.T) {
 	path := "sample.xml.gz"
-	g := new(GNC)
+	g := NewGNC()
 	g.ParseFile(path)
 
 	fmt.Printf("\nThere are %d accounts and %d transactions\n", len(g.Accounts), len(g.Transactions))

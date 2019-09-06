@@ -1,22 +1,19 @@
 package parser
 
-import (
-	"encoding/xml"
-)
-
-// Account struct - automatic parse
+// Account struct - automatic parse.
 type Account struct {
-	XMLName     xml.Name `xml:"account"`
-	Name        string   `xml:"name"`
-	Type        string   `xml:"type"`
-	Description string   `xml:"description"`
-	GUID        string   `xml:"id"`
-	ParentGUID  string   `xml:"parent"`
+	//XMLName     xml.Name `xml:"account"`
+	Name        string `xml:"name"`
+	Type        string `xml:"type"`
+	Description string `xml:"description"`
+	GUID        string `xml:"id"`
+	ParentGUID  string `xml:"parent"`
 	//RawContent  string   `xml:",innerxml"` // Debug
 }
 
-// Transaction struct - manual parse, does not reflect xml structure
+// Transaction struct - manual parse, does not reflect xml structure.
 type Transaction struct {
+	GUID        string
 	Splits      map[string]float64
 	Slots       map[string]string
 	DateEntered string

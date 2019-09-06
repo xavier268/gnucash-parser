@@ -14,9 +14,16 @@ import (
 // GNC is the main structure constructed
 // from parsing a GnuCash file.
 type GNC struct {
-	Accounts     []Account
+	Accounts     map[string]Account
 	Transactions []Transaction
 	dec          *xml.Decoder
+}
+
+// NewGNC constructor.
+func NewGNC() *GNC {
+	g := new(GNC)
+	g.Accounts = make(map[string]Account)
+	return g
 }
 
 // ParseFile reads (read-only) a Gnucash file
@@ -69,7 +76,7 @@ func (gnc *GNC) parseBook() {
 			case "account":
 				a := gnc.parseAccount(ty)
 				if a != nil {
-					gnc.Accounts = append(gnc.Accounts, *a)
+					gnc.Accounts[a.GUID] = *a
 				}
 			case "transaction":
 				a := gnc.parseTransaction(ty)
@@ -135,7 +142,7 @@ func (gnc *GNC) parseTransaction(ty xml.StartElement) *Transaction {
 			case "slots":
 				s := gnc.parseSlots(ty)
 				if s != nil {
-					fmt.Printf("PARSED SLOTS : %#v\n", s)
+					//fmt.Printf("PARSED SLOTS : %#v\n", s)
 					for _, ss := range s.Data {
 						key := ss.Key
 						switch key {
@@ -151,7 +158,7 @@ func (gnc *GNC) parseTransaction(ty xml.StartElement) *Transaction {
 					Date string `xml:"date"`
 				}
 				gnc.dec.DecodeElement(&s, &ty)
-				fmt.Println("===>", s, "<====")
+				//fmt.Println("===>", s, "<====")
 				t.DateEntered = cleanDateString(s.Date)
 
 			case "date-posted":
@@ -159,8 +166,20 @@ func (gnc *GNC) parseTransaction(ty xml.StartElement) *Transaction {
 					Date string `xml:"date"`
 				}
 				gnc.dec.DecodeElement(&s, &ty)
-				fmt.Println("===>", s, "<====")
+				//fmt.Println("===>", s, "<====")
 				t.DatePosted = cleanDateString(s.Date)
+
+			case "id":
+				if ty.Name.Space != "http://www.gnucash.org/XML/trn" {
+					// There are other ids around ...
+					//fmt.Println("Discarding : ", ty.Name.Space)
+					break
+				}
+				var s string
+				gnc.dec.DecodeElement(&s, &ty)
+				//fmt.Println("TRN ID ===>", s, "<====")
+				t.GUID = s
+
 			}
 		case xml.EndElement:
 			if ty.Name.Local == "transaction" {
