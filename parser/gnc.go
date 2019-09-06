@@ -14,7 +14,7 @@ type Account struct {
 // Transaction struct - manual parse, does not reflect xml structure.
 type Transaction struct {
 	GUID        string
-	Splits      map[string]float64
+	Splits      map[string]int
 	Slots       map[string]string
 	DateEntered string
 	DatePosted  string
@@ -23,7 +23,7 @@ type Transaction struct {
 // NewTransaction constructs a new Transaction and initialize maps
 func NewTransaction() *Transaction {
 	t := new(Transaction)
-	t.Splits = make(map[string]float64)
+	t.Splits = make(map[string]int) // Internally, storing cents to avoid rounding errors.
 	t.Slots = make(map[string]string)
 	return t
 }

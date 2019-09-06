@@ -136,7 +136,7 @@ func (gnc *GNC) parseTransaction(ty xml.StartElement) *Transaction {
 						if e != nil {
 							fmt.Println("Converting split value : ", e)
 						}
-						t.Splits[a] = float64(v) / 100.
+						t.Splits[a] = v
 					}
 				}
 			case "slots":
