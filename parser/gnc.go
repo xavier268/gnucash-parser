@@ -1,8 +1,10 @@
 package parser
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+)
 
-// Account struct
+// Account struct - automatic parse
 type Account struct {
 	XMLName     xml.Name `xml:"account"`
 	Name        string   `xml:"name"`
@@ -10,35 +12,21 @@ type Account struct {
 	Description string   `xml:"description"`
 	GUID        string   `xml:"id"`
 	ParentGUID  string   `xml:"parent"`
-	RawContent  string   `xml:",innerxml"` // Debug
+	//RawContent  string   `xml:",innerxml"` // Debug
 }
 
-//Accounts are a set of Account
-type Accounts []Account
-
-// Transaction struct
+// Transaction struct - manual parse, does not reflect xml structure
 type Transaction struct {
-	XMLName    xml.Name `xml:"transaction"`
-	RawContent string   `xml:",innerxml"` // Debug
-
+	Splits      map[string]float64
+	Slots       map[string]string
+	DateEntered string
+	DatePosted  string
 }
 
-// Transactions are a set of Transaction
-type Transactions []Transaction
-
-// Book struct.
-// This structure (arrays one after the other) cannot be decoded automatically.
-// We need to use "event driven" parsing :
-// see - https://eli.thegreenplace.net/2019/faster-xml-stream-processing-in-go/
-// This should also be more efficient for larger files.
-type Book struct {
-	XMLName      xml.Name     `xml:"book"`
-	Accounts     Accounts     `xml:"account"`
-	Transactions Transactions `xml:"transation"`
-}
-
-// Gnc is the top level struct
-type Gnc struct {
-	XMLName xml.Name `xml:"gnc-v2"`
-	Book    Book     `xml:"book"`
+// NewTransaction constructs a new Transaction and initialize maps
+func NewTransaction() *Transaction {
+	t := new(Transaction)
+	t.Splits = make(map[string]float64)
+	t.Slots = make(map[string]string)
+	return t
 }

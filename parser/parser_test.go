@@ -5,11 +5,13 @@ import (
 	"testing"
 )
 
-func TestReading(t *testing.T) {
-	path := "../../compta2015/comptes2014.gnucash"
-	gnc, err := ReadFile(path)
-	fmt.Println(err)
-	fmt.Printf("\n\n%#v\n", gnc.Book.Accounts[50])
-	fmt.Printf("\n\n%#v\n", gnc.Book.Transactions)
+func TestParsing(t *testing.T) {
+	path := "sample.xml.gz"
+	g := new(GNC)
+	g.ParseFile(path)
+
+	fmt.Printf("\nThere are %d accounts and %d transactions\n", len(g.Accounts), len(g.Transactions))
+	fmt.Printf("Account dump :\n%#v\n", g.Accounts)
+	fmt.Printf("Transaction dump :\n%#v\n", g.Transactions)
 
 }
