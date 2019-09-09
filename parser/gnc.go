@@ -3,18 +3,19 @@ package parser
 // Account struct - automatic parse.
 type Account struct {
 	//XMLName     xml.Name `xml:"account"`
-	Name        string `xml:"name"`
-	Type        string `xml:"type"`
-	Description string `xml:"description"`
-	GUID        string `xml:"id"`
-	ParentGUID  string `xml:"parent"`
+	Name        string   `xml:"name"`
+	Type        string   `xml:"type"`
+	Description string   `xml:"description"`
+	GUID        string   `xml:"id"`
+	Parent      string   `xml:"parent"`
+	Child       []string // all direct child  accounts GUID
 	//RawContent  string   `xml:",innerxml"` // Debug
 }
 
 // Transaction struct - manual parse, does not reflect xml structure.
 type Transaction struct {
 	GUID        string
-	Splits      map[string]int
+	Splits      map[string]int // acout => value in cents
 	Slots       map[string]string
 	DateEntered string
 	DatePosted  string

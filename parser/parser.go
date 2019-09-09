@@ -15,6 +15,7 @@ import (
 // from parsing a GnuCash file.
 type GNC struct {
 	Accounts     map[string]Account
+	Balances     map[string]int // Account => cents
 	Transactions []Transaction
 	dec          *xml.Decoder
 }
@@ -23,6 +24,7 @@ type GNC struct {
 func NewGNC() *GNC {
 	g := new(GNC)
 	g.Accounts = make(map[string]Account)
+	g.Balances = nil // not initialized until Balances is called.
 	return g
 }
 
@@ -49,6 +51,10 @@ func (gnc *GNC) ParseFile(path string) {
 
 	// ... and start parsing
 	gnc.parseBook()
+
+	// init Child and Balances
+	gnc.initChild()
+	gnc.initBalance()
 
 }
 
@@ -246,4 +252,17 @@ func cleanDateString(in string) (out string) {
 	}
 	out = r.FindString(in)
 	return out
+}
+
+// initChild will go through all accoutns, updating their child list
+// for more efficient future retrieval.
+func (gnc *GNC) initChild() {
+	fmt.Println("Initializing children ...")
+	for _, a := range gnc.Accounts {
+		pid := a.Parent
+		if len(a.Parent) != 0 {
+			p := gnc.Accounts[pid]
+			p.Child = append(p.Child, a.GUID)
+		}
+	}
 }
