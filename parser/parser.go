@@ -263,6 +263,7 @@ func (gnc *GNC) initChild() {
 		if len(a.Parent) != 0 {
 			p := gnc.Accounts[pid]
 			p.Child = append(p.Child, a.GUID)
+			gnc.Accounts[pid] = p
 		}
 	}
 }
