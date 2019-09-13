@@ -66,7 +66,7 @@ func TestBalanceByDate(t *testing.T) {
 	}
 }
 
-func TestAllBalaces(t *testing.T) {
+func TestAllBalances(t *testing.T) {
 
 	g.PrintAccountBalances("\n", g.Roots[0])
 
