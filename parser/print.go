@@ -5,7 +5,7 @@ import "fmt"
 // PrintAccountOwnBalance displays account own balance,
 // without its child accounts
 func (gnc *GNC) PrintAccountOwnBalance(prefix string, actGUID string) {
-	fmt.Printf("%s%-40.40s\t:%20.2f €", prefix, gnc.AccountName(actGUID), gnc.Balance(actGUID))
+	fmt.Printf("%s%-60.60s\t:%20.2f €", prefix, gnc.AccountName(actGUID), gnc.Balance(actGUID))
 }
 
 // PrintAccountBalances includes the child accounts
@@ -40,7 +40,7 @@ func (gnc *GNC) AccountName(actGUID string) string {
 	if !ok {
 		return "?! guid : " + actGUID
 	}
-	return n.Name + "(" + n.Description + ")"
+	return n.Name + "(" + n.Description + " " + actGUID + ")"
 }
 
 // PrintRoots list the root (ie, no parent) accounts
@@ -55,4 +55,11 @@ func (gnc *GNC) PrintRoots() {
 func (gnc *GNC) PrintStats() {
 	fmt.Printf("\nThere are %d accounts and %d transactions\nLast entered %s, last posted %s",
 		len(gnc.Accounts), len(gnc.Transactions), gnc.LastEntered, gnc.LastPosted)
+}
+
+// PrintAccountDetails display all transation in account, and cumultaive balance
+func (gnc *GNC) PrintAccountDetails(actid string) {
+	fmt.Printf("\nDetails for : %s\n", gnc.AccountName(actid))
+
+	fmt.Println("TO DO ...")
 }

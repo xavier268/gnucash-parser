@@ -72,3 +72,10 @@ func TestAllBalances(t *testing.T) {
 
 	fmt.Println()
 }
+
+func TestAccountDetails(t *testing.T) {
+
+	g.PrintAccountDetails("f98373895da62922d43ed92b19cafd76")
+
+	fmt.Println()
+}
