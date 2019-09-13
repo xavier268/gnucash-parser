@@ -14,10 +14,12 @@ import (
 // GNC is the main structure constructed
 // from parsing a GnuCash file.
 type GNC struct {
-	Accounts     map[string]Account
-	Balances     map[string]int // Account => cents
-	Transactions []Transaction
-	dec          *xml.Decoder
+	Accounts                map[string]Account
+	Balances                map[string]int // Account => cents
+	Transactions            []Transaction
+	dec                     *xml.Decoder
+	Roots                   []string // GUID of the root accounts, a root has no parent.
+	LastEntered, LastPosted string   // date of last entry
 }
 
 // NewGNC constructor.
@@ -88,6 +90,12 @@ func (gnc *GNC) parseBook() {
 				a := gnc.parseTransaction(ty)
 				if a != nil {
 					gnc.Transactions = append(gnc.Transactions, *a)
+					if a.DateEntered > gnc.LastEntered {
+						gnc.LastEntered = a.DateEntered
+					}
+					if a.DatePosted > gnc.LastPosted {
+						gnc.LastPosted = a.DatePosted
+					}
 				}
 			default:
 				// do nothing
@@ -254,7 +262,7 @@ func cleanDateString(in string) (out string) {
 	return out
 }
 
-// initChild will go through all accoutns, updating their child list
+// initChild will go through all accounts, updating their child list
 // for more efficient future retrieval.
 func (gnc *GNC) initChild() {
 	fmt.Println("Initializing children ...")
@@ -264,6 +272,8 @@ func (gnc *GNC) initChild() {
 			p := gnc.Accounts[pid]
 			p.Child = append(p.Child, a.GUID)
 			gnc.Accounts[pid] = p
+		} else {
+			gnc.Roots = append(gnc.Roots, a.GUID)
 		}
 	}
 }

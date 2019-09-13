@@ -15,7 +15,7 @@ type Account struct {
 // Transaction struct - manual parse, does not reflect xml structure.
 type Transaction struct {
 	GUID        string
-	Splits      map[string]int // acout => value in cents
+	Splits      map[string]int // account guid => value in cents
 	Slots       map[string]string
 	DateEntered string
 	DatePosted  string
