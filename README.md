@@ -1,5 +1,5 @@
 # gnucash-parser
 
-Parse Gnucash files for the compressed Gnucah fromat to a go obhect where it can be used easily.
+Parse Gnucash files to read from compressed Gnucah format files into a go object where it can be used easily.
 
-Designed to only read the Gnucash file, will never modify it.
+This librairy will NEVER modify the Guncash file.
