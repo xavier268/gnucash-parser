@@ -1,6 +1,9 @@
 package parser
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
 
 // PrintAccountOwnBalance displays account own balance,
 // without its child accounts
@@ -57,9 +60,32 @@ func (gnc *GNC) PrintStats() {
 		len(gnc.Accounts), len(gnc.Transactions), gnc.LastEntered, gnc.LastPosted)
 }
 
-// PrintAccountDetails display all transation in account, and cumultaive balance
+// PrintAccountDetails display all splits for account, and cumulative balance
+// Sort by date
 func (gnc *GNC) PrintAccountDetails(actid string) {
+	type resentry struct {
+		string  // date posted
+		float64 // value
+	}
+	var res []resentry
+
 	fmt.Printf("\nDetails for : %s\n", gnc.AccountName(actid))
 
-	fmt.Println("TO DO ...")
+	for _, t := range gnc.Transactions {
+		for a, s := range t.Splits {
+			if a == actid {
+				v := float64(s) / 100
+				res = append(res, resentry{t.DatePosted, v})
+			}
+		}
+	}
+	sort.Slice(res, func(i, j int) bool {
+		return res[i].string < res[j].string
+	})
+
+	b := 0.
+	for _, r := range res {
+		b += r.float64
+		fmt.Printf("\n>>%s\t%.2f\t%.2f", r.string, r.float64, b)
+	}
 }

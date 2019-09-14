@@ -150,7 +150,8 @@ func (gnc *GNC) parseTransaction(ty xml.StartElement) *Transaction {
 						if e != nil {
 							fmt.Println("Converting split value : ", e)
 						}
-						t.Splits[a] = v
+						old, _ := t.Splits[a] // BUGFIX : There can be multiple splits for same account !
+						t.Splits[a] = v + old
 					}
 				}
 			case "slots":
