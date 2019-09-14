@@ -69,7 +69,7 @@ func (gnc *GNC) PrintAccountDetails(actid string) {
 	}
 	var res []resentry
 
-	fmt.Printf("\nDetails for : %s\n", gnc.AccountName(actid))
+	fmt.Printf("\nDetails for : %s\n    Date\t  Amount\t\t  Total", gnc.AccountName(actid))
 
 	for _, t := range gnc.Transactions {
 		for a, s := range t.Splits {
@@ -86,6 +86,6 @@ func (gnc *GNC) PrintAccountDetails(actid string) {
 	b := 0.
 	for _, r := range res {
 		b += r.float64
-		fmt.Printf("\n>>%s\t%.2f\t%.2f", r.string, r.float64, b)
+		fmt.Printf("\n %s\t%10.2f\t\t%10.2f", r.string, r.float64, b)
 	}
 }
